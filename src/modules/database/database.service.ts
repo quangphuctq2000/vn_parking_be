@@ -4,9 +4,9 @@ import { Users } from './models/users';
 import { RevokeTokens } from './models/revokeTokens';
 import { ParkingStations } from './models/parkingStations';
 
-export const DatabaseService = {
-  provide: 'CONNECTION',
-  useFactory: async (configService: ConfigService) => {
+export const dataSource = {
+  provide: DataSource,
+  useFactory: async (configService: ConfigService): Promise<DataSource> => {
     const dbConfig = configService.getDatabaseConfig();
     const dataSource = new DataSource({
       type: dbConfig.type,
