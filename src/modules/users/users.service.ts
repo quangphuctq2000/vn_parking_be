@@ -1,12 +1,24 @@
+import { User } from '@/database/models/users';
 import { Injectable } from '@nestjs/common';
 import { DataSource } from 'typeorm';
-import { Users } from '../database/models/users';
+
 @Injectable()
 export class UsersService {
-  constructor(private dataSource: DataSource) {}
+    private userRepository = this.dataSource.getRepository(User);
+    constructor(private dataSource: DataSource) {}
 
-  async create() {
-    const result = await this.dataSource.getRepository(Users).find();
-    console.log(result);
-  }
+    async create(user: User) {
+        await this.userRepository.save(user);
+    }
+
+    async get(id: string): Promise<User | null> {
+        return await this.userRepository.findOne({
+            where: { id },
+            relations: {
+                vehicle: true,
+            },
+        });
+    }
+
+    async getUserRole(userId: string) {}
 }
