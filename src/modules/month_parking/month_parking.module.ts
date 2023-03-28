@@ -8,5 +8,6 @@ import { VehicleModule } from '../vehicle/vehicle.module';
     controllers: [MonthParkingController],
     providers: [MonthParkingService],
     imports: [ParkingStationsModule, VehicleModule],
+    exports: [MonthParkingService],
 })
 export class MonthParkingModule {}

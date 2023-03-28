@@ -26,6 +26,7 @@ import { VehicleService } from '../vehicle/vehicle.service';
 import moment from 'moment';
 import { request } from 'http';
 import { OnePayInternational } from 'vn-payments';
+import { MonthParkingService } from '../month_parking/month_parking.service';
 
 @Controller('parking')
 @ApiTags('parking')
@@ -36,6 +37,7 @@ export class ParkingController {
         private usersService: UsersService,
         private parkingStationService: ParkingStationsService,
         private vehicleService: VehicleService,
+        private monthParkingService: MonthParkingService,
     ) {}
 
     @Post('/checkIn')
@@ -82,10 +84,29 @@ export class ParkingController {
         console.log(parking);
 
         const checkout = moment(new Date());
+        const existingMonthParking =
+            await this.monthParkingService.getMonthParking(
+                checkout.format('M') as unknown as number,
+                body.parkingStationId,
+                body.vehicleIdentity,
+            );
+        console.log(existingMonthParking);
+
+        if (existingMonthParking) {
+            parking.checkOut = new Date();
+            parking.price = 0;
+            await this.parkingService.checkOutSuccess(parking);
+            return 'success';
+        }
         const duration = moment
             .duration(checkout.diff(moment(parking.checkIn)))
             .hours();
-        const price = parking.parkingStation.pricePerHour * duration;
+        console.log(duration);
+
+        const price =
+            duration > 1
+                ? parking.parkingStation.pricePerHour * duration
+                : parking.parkingStation.pricePerHour;
         console.log(parking);
         console.log(duration);
         const checkoutInfo = {

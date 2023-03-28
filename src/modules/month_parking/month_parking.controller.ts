@@ -33,6 +33,11 @@ export class MonthParkingController {
                 body.parkingStationId,
                 body.month,
             );
+        console.log(
+            parkingStationParkingMonth,
+            existingParkingStation.parkingLotNumber,
+        );
+
         if (
             parkingStationParkingMonth[1] >
             existingParkingStation.parkingLotNumber

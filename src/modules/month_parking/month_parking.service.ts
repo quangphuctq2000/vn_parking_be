@@ -24,4 +24,24 @@ export class MonthParkingService {
             },
         });
     }
+
+    async getMonthParking(
+        month: number,
+        parkingStationId: number,
+        vehicleIdentityNumber: string,
+    ) {
+        console.log(month, parkingStationId, vehicleIdentityNumber);
+
+        return await this.monthParkingRepository.findOne({
+            where: {
+                parkingStation: {
+                    id: parkingStationId,
+                },
+                vehicle: {
+                    identityNumber: vehicleIdentityNumber,
+                },
+                month,
+            },
+        });
+    }
 }

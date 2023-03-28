@@ -5,6 +5,7 @@ import { ParkingLotModule } from '../parking_lots/parking_lots.module';
 import { UsersModule } from '../users/users.module';
 import { ParkingStationsModule } from '../parking_stations/parking_stations.module';
 import { VehicleModule } from '../vehicle/vehicle.module';
+import { MonthParkingModule } from '../month_parking/month_parking.module';
 
 @Module({
     controllers: [ParkingController],
@@ -14,6 +15,7 @@ import { VehicleModule } from '../vehicle/vehicle.module';
         UsersModule,
         ParkingStationsModule,
         VehicleModule,
+        MonthParkingModule,
     ],
 })
 export class ParkingModule {}
