@@ -5,6 +5,9 @@ import { ParkingStation } from './models/parkingStations';
 import { ParkingLot } from './models/parkingLots';
 import { dbConfig } from '@/ultis/config';
 import { Vehicle } from './models/vehicle';
+import { Parking } from './models/parking';
+import { Booking } from './models/booking';
+import { MonthParking } from './models/monthParking';
 
 export const dataSource = {
     provide: DataSource,
@@ -19,7 +22,16 @@ export const dataSource = {
             username: databaseConfig.username,
             password: databaseConfig.password,
             database: databaseConfig.database,
-            entities: [User, RevokeToken, ParkingStation, ParkingLot, Vehicle],
+            entities: [
+                User,
+                RevokeToken,
+                ParkingStation,
+                ParkingLot,
+                Vehicle,
+                Parking,
+                Booking,
+                MonthParking,
+            ],
             synchronize: true,
         });
         try {

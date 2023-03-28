@@ -51,6 +51,7 @@ export class ParkingStationsController {
             parkingStation.latitude = body.latitude;
             parkingStation.longitude = body.longitude;
             parkingStation.description = body.description;
+            parkingStation.parkingLotNumber = body.parkingLotNumber;
             parkingStation.user = existedUser;
 
             await this.parkingStationsService.create(parkingStation);
@@ -60,7 +61,6 @@ export class ParkingStationsController {
                 latitude: parkingStation.latitude,
                 longitude: parkingStation.longitude,
                 description: parkingStation.description,
-                // parkingLots: [],
                 parkingLotNumber: parkingStation.parkingLotNumber,
                 pricePerHour: parkingStation.pricePerHour,
                 pricePerMonth: parkingStation.pricePerMonth,

@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber } from 'class-validator';
+import { IsDate, IsNumber, IsString } from 'class-validator';
 
 export class Parking {
     @ApiProperty()
@@ -18,15 +18,33 @@ export class Parking {
 export class CheckInDto {
     @ApiProperty()
     @IsNumber()
-    parkingLotId: number;
+    parkingStationId: number;
 
-    userId: string;
+    @ApiProperty()
+    @IsString()
+    vehicleIdentity: string;
 }
 
 export class CheckOutDto {
     @ApiProperty()
     @IsNumber()
-    parkingLotId: number;
+    parkingStationId: number;
 
-    userId: string;
+    @ApiProperty()
+    @IsString()
+    vehicleIdentity: string;
+}
+
+export class CheckoutSuccessDto {
+    @ApiProperty()
+    @IsNumber()
+    parkingId: number;
+
+    @ApiProperty()
+    @IsNumber()
+    price: number;
+
+    @ApiProperty()
+    @IsDate()
+    checkOut: Date;
 }

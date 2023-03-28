@@ -7,6 +7,9 @@ import { ParkingLotModule } from './modules/parking_lots/parking_lots.module';
 import { DatabaseModule } from './database/database.module';
 import { ParkingModule } from './modules/parking/parking.module';
 import { VehicleModule } from './modules/vehicle/vehicle.module';
+import { PaymentModule } from './modules/payment/payment.module';
+import { BookingModule } from './modules/booking/booking.module';
+import { MonthParkingModule } from './modules/month_parking/month_parking.module';
 
 @Module({
     imports: [
@@ -17,6 +20,9 @@ import { VehicleModule } from './modules/vehicle/vehicle.module';
         DatabaseModule,
         ParkingModule,
         VehicleModule,
+        PaymentModule,
+        BookingModule,
+        MonthParkingModule,
     ],
     providers: [AppService],
 })

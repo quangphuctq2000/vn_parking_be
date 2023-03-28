@@ -8,6 +8,7 @@ import { UsersModule } from '../users/users.module';
     controllers: [VehicleController],
     providers: [VehicleService],
     imports: [UsersModule],
+    exports: [VehicleService],
 })
 export class VehicleModule {
     configure(consumer: MiddlewareConsumer) {

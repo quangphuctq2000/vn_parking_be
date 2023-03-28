@@ -36,4 +36,12 @@ export class ParkingStationsService {
             // },
         });
     }
+
+    async getParkingStation(id: number) {
+        return await this.parkingStationRepository.findOne({
+            where: {
+                id,
+            },
+        });
+    }
 }

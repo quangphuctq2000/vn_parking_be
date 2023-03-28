@@ -9,12 +9,20 @@ export class Vehicle {
     @IsString()
     @ApiProperty()
     identityNumber: string;
+
+    @ApiProperty()
+    @IsString()
+    description: string;
 }
 
 export class CreateVehicleDto {
     @ApiProperty()
     @IsString()
     identityNumber: string;
+
+    @ApiProperty()
+    @IsString()
+    description: string;
 
     userId: string;
 }

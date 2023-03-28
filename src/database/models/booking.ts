@@ -1,29 +1,12 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Vehicle } from './vehicle';
 import { ParkingStation } from './parkingStations';
+import { BookingType } from '@/ultis/const';
 
 @Entity()
-export class Parking {
+export class Booking {
     @PrimaryGeneratedColumn()
-    id: number;
-
-    @Column({
-        type: 'datetime',
-        default: null,
-    })
-    checkIn: Date;
-
-    @Column({
-        type: 'datetime',
-        default: null,
-    })
-    checkOut: Date;
-
-    @Column({
-        type: 'double',
-        default: null,
-    })
-    price: number;
+    id: string;
 
     @ManyToOne(() => Vehicle, (vehicle) => vehicle.id)
     vehicle: Vehicle;
@@ -31,6 +14,15 @@ export class Parking {
     @ManyToOne(() => ParkingStation, (parkingStation) => parkingStation.id)
     parkingStation: ParkingStation;
 
+    @Column({ type: 'datetime' })
+    from: Date;
+
+    @Column({ type: 'datetime' })
+    to: Date;
+
     @Column()
-    vehicleIdentityNumber: string;
+    price: number;
+
+    @Column()
+    type: BookingType;
 }

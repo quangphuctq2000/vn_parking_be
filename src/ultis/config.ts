@@ -19,3 +19,11 @@ export const dbConfig: DbConfig = {
     password: process.env.DB_PASSWORD,
     database: process.env.DB_DATABASE,
 };
+
+export const payment = {
+    URL: process.env.PAYMENT_URL,
+    MERCHANTID: process.env.MERCHANTID,
+    ACCESSCODE: process.env.ACCESSCODE,
+    HASHCODE: process.env.HASHCODE,
+    VPC_COMMAND: process.env.COMMAND,
+};

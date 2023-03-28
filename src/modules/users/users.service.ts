@@ -14,9 +14,6 @@ export class UsersService {
     async get(id: string): Promise<User | null> {
         return await this.userRepository.findOne({
             where: { id },
-            relations: {
-                vehicle: true,
-            },
         });
     }
 
