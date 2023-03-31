@@ -1,11 +1,4 @@
-import {
-    Column,
-    Entity,
-    ManyToOne,
-    OneToMany,
-    PrimaryGeneratedColumn,
-} from 'typeorm';
-import { ParkingLot } from './parkingLots';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from './users';
 
 @Entity()
@@ -51,9 +44,6 @@ export class ParkingStation {
         default: 0,
     })
     pricePerMonth: number;
-
-    // @OneToMany(() => ParkingLot, (parkingLot) => parkingLot.parkingStation)
-    // parkingLots: ParkingLot[];
 
     @ManyToOne(() => User, (user) => user.parkingStations)
     user: User;

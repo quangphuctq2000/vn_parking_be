@@ -33,6 +33,7 @@ export const dataSource = {
                 MonthParking,
             ],
             synchronize: true,
+            logging: true,
         });
         try {
             await dataSource.initialize();

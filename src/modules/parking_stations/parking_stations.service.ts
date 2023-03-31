@@ -1,3 +1,4 @@
+import { Parking } from '@/database/models/parking';
 import { ParkingStation } from '@/database/models/parkingStations';
 import { User } from '@/database/models/users';
 import { Injectable } from '@nestjs/common';
@@ -13,7 +14,7 @@ export class ParkingStationsService {
         await this.parkingStationRepository.save(parkingStation);
     }
 
-    async getAll(userId: string) {
+    async getAllUserParkingStation(userId: string): Promise<ParkingStation[]> {
         return await this.parkingStationRepository.find({
             where: {
                 user: {
@@ -23,7 +24,10 @@ export class ParkingStationsService {
         });
     }
 
-    async get(id: number, userId: string) {
+    async getUserParkingStation(
+        id: number,
+        userId: string,
+    ): Promise<ParkingStation | null> {
         return await this.parkingStationRepository.findOne({
             where: {
                 id,
@@ -31,13 +35,14 @@ export class ParkingStationsService {
                     id: userId,
                 },
             },
-            // relations: {
-            //     parkingLots: true,
-            // },
         });
     }
 
-    async getParkingStation(id: number) {
+    async getAll(): Promise<ParkingStation[]> {
+        return await this.parkingStationRepository.find();
+    }
+
+    async get(id: number): Promise<ParkingStation> {
         return await this.parkingStationRepository.findOne({
             where: {
                 id,

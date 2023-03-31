@@ -24,6 +24,6 @@ export class User {
     @OneToMany(() => ParkingStation, (parkingStation) => parkingStation.user)
     parkingStations: ParkingStation[];
 
-    @OneToMany(() => Vehicle, (vehicle) => vehicle.id)
+    @OneToMany(() => Vehicle, (vehicle) => vehicle.user)
     vehicle: Vehicle;
 }

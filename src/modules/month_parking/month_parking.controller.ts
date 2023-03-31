@@ -20,12 +20,14 @@ export class MonthParkingController {
         @Body(new ValidationPipe()) body: CreateMonthParkingDto,
     ) {
         const existingParkingStation =
-            await this.parkingStationService.getParkingStation(
+            await this.parkingStationService.get(
                 body.parkingStationId,
             );
-        const existingVehicle = await this.vehicleService.get(
+        const existingVehicle = await this.vehicleService.getVehicle(
             body.vehicleIdentityNumber,
         );
+        console.log(existingVehicle);
+
         if (!existingVehicle) throw new BadRequestException();
         if (!existingParkingStation) throw new BadRequestException();
         const parkingStationParkingMonth =

@@ -1,8 +1,8 @@
+import { ParkingStation } from '@/ultis/dto/parking_station';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString } from 'class-validator';
-import { ParkingLot } from '../parking_lots/parking_lots.dto';
 
-export class CreateParkingStationDto {
+export class CreateParkingStationRequestBody {
     @ApiProperty({
         default: 'parking station',
         required: true,
@@ -45,48 +45,10 @@ export class CreateParkingStationDto {
     @ApiProperty()
     @IsNumber()
     pricePerMonth: number;
-
-    @IsString()
-    userId: string;
 }
 
-export class ParkingStation {
-    @ApiProperty({
-        default: 123,
-        required: true,
-    })
-    @IsString()
-    id: number;
+export class CreateParkingStationResponseBody extends ParkingStation {}
 
-    @ApiProperty({
-        default: 'parking station',
-        required: true,
-    })
-    @IsString()
-    name: string;
+export class GetParkingStationResponse extends ParkingStation {}
 
-    @ApiProperty({
-        required: true,
-    })
-    @IsNumber()
-    longitude: number;
-
-    @ApiProperty({
-        required: true,
-    })
-    @IsNumber()
-    latitude: number;
-
-    @ApiProperty({
-        required: true,
-    })
-    @IsString()
-    description: string;
-
-    // @ApiProperty({
-    //     required: true,
-    //     type: ParkingLot,
-    //     isArray: true,
-    // })
-    // parkingLots: Array<ParkingLot>;
-}
+export const GetAllParkingStationResponse =  Array<ParkingStation>

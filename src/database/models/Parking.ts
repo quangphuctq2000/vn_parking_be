@@ -1,4 +1,10 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+    Column,
+    Entity,
+    IsNull,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Vehicle } from './vehicle';
 import { ParkingStation } from './parkingStations';
 
@@ -14,7 +20,7 @@ export class Parking {
     checkIn: Date;
 
     @Column({
-        type: 'datetime',
+        nullable: true,
         default: null,
     })
     checkOut: Date;
@@ -25,7 +31,7 @@ export class Parking {
     })
     price: number;
 
-    @ManyToOne(() => Vehicle, (vehicle) => vehicle.id)
+    @ManyToOne(() => Vehicle, (vehicle) => vehicle.parkings)
     vehicle: Vehicle;
 
     @ManyToOne(() => ParkingStation, (parkingStation) => parkingStation.id)

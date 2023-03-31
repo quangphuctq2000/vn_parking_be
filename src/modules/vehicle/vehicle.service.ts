@@ -1,7 +1,7 @@
 import { Vehicle } from '@/database/models/vehicle';
 import { Injectable } from '@nestjs/common';
 import { from } from 'rxjs';
-import { DataSource, LessThan, MoreThan } from 'typeorm';
+import { DataSource, Equal, IsNull, LessThan, MoreThan, Not } from 'typeorm';
 
 @Injectable()
 export class VehicleService {
@@ -16,30 +16,89 @@ export class VehicleService {
         return await this.vehicleRepository.findOne({
             where: {
                 identityNumber,
+                parkings: {
+                    checkOut: IsNull(),
+                },
+            },
+            relations: {
+                parkings: true,
             },
         });
     }
 
-    async getParkingVehicle(parkingStationId: number, currentTime: Date) {
+    async getVehicle(identityNumber: string) {
+        return await this.vehicleRepository.findOne({
+            where: {
+                identityNumber,
+            },
+            relations: {
+                parkings: true,
+            },
+        });
+    }
+
+    async getVehicleById(id: number) {
+        console.log(Number(id));
+        console.log(id);
+
+        return await this.vehicleRepository.findOne({
+            where: {
+                id: Number(id),
+                parkings: {
+                    checkOut: IsNull(),
+                },
+            },
+            relations: {
+                parkings: {
+                    parkingStation: true,
+                },
+            },
+        });
+    }
+
+    async getParkingVehicle(
+        parkingStationId: number,
+        currentTime: Date,
+        month: number,
+    ) {
         const parkingVehicle = await this.vehicleRepository.find({
             where: [
                 {
                     parkings: {
-                        id: parkingStationId,
-                        checkOut: null,
-                    },
-                },
-                {
-                    booking: {
-                        from: LessThan(currentTime),
-                        to: MoreThan(currentTime),
                         parkingStation: {
                             id: parkingStationId,
                         },
+                        checkOut: IsNull(),
+                    },
+                },
+                {
+                    monthParkings: {
+                        month,
+                    },
+                },
+                {
+                    bookings: {
+                        from: LessThan(currentTime),
+                        to: MoreThan(currentTime),
                     },
                 },
             ],
+            relations: {
+                parkings: true,
+                monthParkings: true,
+                bookings: true,
+            },
         });
         return parkingVehicle;
+    }
+
+    async getAllUserVehicle(userId: string) {
+        return await this.vehicleRepository.find({
+            where: {
+                user: {
+                    id: userId,
+                },
+            },
+        });
     }
 }

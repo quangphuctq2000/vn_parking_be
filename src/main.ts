@@ -1,11 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { ParkingLot } from './modules/parking_lots/parking_lots.dto';
-import { ParkingStation } from './modules/parking_stations/parking_station.dto';
 import { User } from './modules/users/user.dto';
 import { Vehicle } from './modules/vehicle/vehicle.dto';
-import { Parking } from './modules/parking/parking.dto';
+import { ParkingStation } from './ultis/dto/parking_station';
+import { Parking } from './ultis/dto/parking';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
@@ -16,11 +15,13 @@ async function bootstrap() {
         .setVersion('1.0')
         .build();
     const document = SwaggerModule.createDocument(app, config, {
-        extraModels: [ParkingLot, ParkingStation, User, Vehicle, Parking],
+        extraModels: [ParkingStation, User, Vehicle, Parking],
     });
     SwaggerModule.setup('api', app, document, {
         swaggerOptions: {
             persistAuthorization: true,
+            tagsSorter: 'alpha',
+            operationsSorter: 'method',
         },
     });
     app.enableCors();

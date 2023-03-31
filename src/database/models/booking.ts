@@ -8,7 +8,7 @@ export class Booking {
     @PrimaryGeneratedColumn()
     id: string;
 
-    @ManyToOne(() => Vehicle, (vehicle) => vehicle.id)
+    @ManyToOne(() => Vehicle, (vehicle) => vehicle.bookings)
     vehicle: Vehicle;
 
     @ManyToOne(() => ParkingStation, (parkingStation) => parkingStation.id)

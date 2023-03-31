@@ -10,6 +10,7 @@ import {
 import { User } from './users';
 import { Parking } from './parking';
 import { Booking } from './booking';
+import { MonthParking } from './monthParking';
 
 @Entity()
 export class Vehicle {
@@ -24,12 +25,15 @@ export class Vehicle {
     @Column()
     description: string;
 
-    @ManyToOne(() => User, (user) => user.id)
+    @ManyToOne(() => User, (user) => user.vehicle)
     user: User;
 
-    @OneToMany(() => Parking, (parking) => parking.id)
+    @OneToMany(() => Parking, (parking) => parking.vehicle)
     parkings: Parking[];
 
-    @OneToMany(() => Booking, (booking) => booking.id)
-    booking: Booking;
+    @OneToMany(() => Booking, (booking) => booking.vehicle)
+    bookings: Booking[];
+
+    @OneToMany(() => MonthParking, (monthParking) => monthParking.vehicle)
+    monthParkings: MonthParking[];
 }

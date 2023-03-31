@@ -16,7 +16,6 @@ import {
     ApiTags,
 } from '@nestjs/swagger';
 import { ParkingService } from './parking.service';
-import { ParkingLotService } from '../parking_lots/parking_lots.service';
 import { UsersService } from '../users/users.service';
 import { Parking } from '@/database/models/parking';
 import { CheckInDto, CheckOutDto, CheckoutSuccessDto } from './parking.dto';
@@ -33,8 +32,6 @@ import { MonthParkingService } from '../month_parking/month_parking.service';
 export class ParkingController {
     constructor(
         private parkingService: ParkingService,
-        private parkingLotService: ParkingLotService,
-        private usersService: UsersService,
         private parkingStationService: ParkingStationsService,
         private vehicleService: VehicleService,
         private monthParkingService: MonthParkingService,
@@ -47,10 +44,9 @@ export class ParkingController {
     })
     async checkIn(@Body(new ValidationPipe()) body: CheckInDto) {
         try {
-            const parkingStation =
-                await this.parkingStationService.getParkingStation(
-                    body.parkingStationId,
-                );
+            const parkingStation = await this.parkingStationService.get(
+                body.parkingStationId,
+            );
             if (!parkingStation) throw new BadRequestException();
             const existingVehicle = await this.vehicleService.get(
                 body.vehicleIdentity,
@@ -58,6 +54,7 @@ export class ParkingController {
             const parking = new Parking();
             parking.parkingStation = parkingStation;
             parking.checkIn = new Date();
+            // parking.checkOut = null;
             parking.vehicleIdentityNumber = body.vehicleIdentity;
             if (existingVehicle) {
                 parking.vehicle = existingVehicle;
@@ -117,7 +114,7 @@ export class ParkingController {
         const checkoutData = {
             againLink: 'http://localhost:3000',
             amount: price,
-            clientIp: request.ip,
+            clientIp: '127.0.0.1',
             currency: 'VND',
             locale: 'vn',
             orderId: moment(new Date()).format('HHmmss').toString(),

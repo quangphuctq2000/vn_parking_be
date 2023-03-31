@@ -22,6 +22,8 @@ export class AuthService {
 
             return decodedIdToken;
         } catch (error) {
+            console.log('error', error);
+
             return false;
         }
     }
