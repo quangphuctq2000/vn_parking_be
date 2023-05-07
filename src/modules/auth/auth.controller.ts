@@ -1,88 +1,114 @@
 import {
     Body,
-    ConflictException,
     Controller,
     HttpCode,
-    NotFoundException,
     Post,
-    Query,
-    Req,
-    UnauthorizedException,
+    Put,
     ValidationPipe,
 } from '@nestjs/common';
-// import certificate from './../../../project-9f526-firebase-adminsdk-kzbop-7b87b3db21.json';
 import { AuthService } from './auth.service';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
-    ApiBody,
-    ApiProperty,
-    ApiQuery,
-    ApiResponse,
-    ApiTags,
-} from '@nestjs/swagger';
-import { UsersService } from '../users/users.service';
-import { User } from '@/database/models/users';
-import { User as UserResponse } from './../users/user.dto';
-import { Role } from '@/ultis/role';
-import { LoginDto, SignUpDto } from './auth.dto';
+    LoginData,
+    CreateUserData,
+    AuthWithGoogleData,
+    UpdateUserInfoData,
+    UpdateUserEmailPasswordData,
+} from './auth.dto';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-    constructor(
-        private authService: AuthService,
-        private usersService: UsersService,
-    ) {}
+    constructor(private authService: AuthService) {}
 
     @Post('/signup')
     @ApiResponse({
-        type: UserResponse,
+        description: 'create user success',
         status: 200,
     })
+    @ApiResponse({
+        description: 'invalid token',
+        status: 401,
+    })
+    @ApiResponse({
+        description: 'user already existed',
+        status: 400,
+    })
     @HttpCode(200)
-    async signUp(@Body(new ValidationPipe()) body: SignUpDto) {
-        const decodedIdToken = await this.authService.checkToken(body.token);
-        console.log(body);
-
-        if (!decodedIdToken) throw new UnauthorizedException();
+    async signUp(@Body(new ValidationPipe()) body: CreateUserData) {
         try {
-            const existedUser = await this.usersService.get(decodedIdToken.uid);
-            if (existedUser) throw new ConflictException();
-
-            const newUser = new User();
-            newUser.id = decodedIdToken.uid;
-            newUser.email = decodedIdToken.email;
-            newUser.role = body.role;
-            await this.usersService.create(newUser);
-            const response: UserResponse = {
-                id: newUser.id,
-                email: newUser.email,
-            };
-            return response;
+            await this.authService.createUser(body);
+            return true;
         } catch (error) {
-            throw error;
+            return error;
         }
     }
 
     @Post('/login')
     @ApiResponse({
-        type: UserResponse,
+        description: 'login success',
         status: 200,
     })
+    @ApiResponse({
+        description: 'invalid token',
+        status: 401,
+    })
+    @ApiResponse({
+        status: 400,
+        description: 'bad request',
+    })
     @HttpCode(200)
-    async login(@Body(new ValidationPipe()) body: LoginDto) {
-        const decodedIdToken = await this.authService.checkToken(body.token);
-        if (!decodedIdToken) throw new UnauthorizedException();
+    async login(@Body(new ValidationPipe()) body: LoginData) {
         try {
-            const existedUser = await this.usersService.get(decodedIdToken.uid);
-            if (!existedUser) throw new NotFoundException();
-
-            const response: UserResponse = {
-                id: existedUser.id,
-                email: existedUser.email,
-            };
-            return response;
+            await this.authService.login(body);
+            return true;
         } catch (error) {
-            throw error;
+            return error;
+        }
+    }
+
+    @Post('/google-auth')
+    @ApiResponse({
+        description: 'login success',
+        status: 200,
+    })
+    @ApiResponse({
+        description: 'invalid token',
+        status: 401,
+    })
+    @HttpCode(200)
+    async loginWithGoogle(
+        @Body(new ValidationPipe()) body: AuthWithGoogleData,
+    ) {
+        try {
+            await this.authService.authWithGoogle(body);
+            return true;
+        } catch (error) {
+            return error;
+        }
+    }
+
+    @Put('/user-info')
+    @ApiBearerAuth()
+    async updateUserInfo(@Body(new ValidationPipe()) body: UpdateUserInfoData) {
+        try {
+            await this.authService.updateUserInfo(body);
+            return true;
+        } catch (error) {
+            return error;
+        }
+    }
+
+    @Put('/user-auth-info')
+    @ApiBearerAuth()
+    async updateUserEmailPassword(
+        @Body(new ValidationPipe()) body: UpdateUserEmailPasswordData,
+    ) {
+        try {
+            await this.authService.updateEmailPassword(body);
+            return true;
+        } catch (error) {
+            return error;
         }
     }
 }

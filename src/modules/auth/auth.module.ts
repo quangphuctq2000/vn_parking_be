@@ -1,13 +1,33 @@
-import { Global, Module } from '@nestjs/common';
+import {
+    Global,
+    MiddlewareConsumer,
+    Module,
+    RequestMethod,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
-import { UsersModule } from '../users/users.module';
+import { app } from './firebase';
+import { AuthMiddleware } from '@/helpers/authenticationMiddleware';
 
 @Global()
 @Module({
-    providers: [AuthService],
+    providers: [
+        {
+            provide: 'APP',
+            useValue: app,
+        },
+        AuthService,
+    ],
     controllers: [AuthController],
     exports: [AuthService],
-    imports: [UsersModule],
 })
-export class AuthModule {}
+export class AuthModule {
+    configure(consumer: MiddlewareConsumer) {
+        consumer
+            .apply(AuthMiddleware)
+            .forRoutes(
+                { path: 'auth/user-info', method: RequestMethod.PUT },
+                { path: 'auth/user-auth-info', method: RequestMethod.PUT },
+            );
+    }
+}
