@@ -6,7 +6,7 @@ import { BookingType } from '@/ultis/const';
 @Entity()
 export class Booking {
     @PrimaryGeneratedColumn()
-    id: string;
+    id: number;
 
     @ManyToOne(() => Vehicle, (vehicle) => vehicle.bookings)
     vehicle: Vehicle;
@@ -26,6 +26,6 @@ export class Booking {
     @Column()
     price: number;
 
-    @Column()
+    @Column({ default: null })
     type: BookingType;
 }

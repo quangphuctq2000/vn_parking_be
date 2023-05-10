@@ -6,7 +6,7 @@ import {
     Injectable,
     UnauthorizedException,
 } from '@nestjs/common';
-import { DataSource, IsNull, Not } from 'typeorm';
+import { DataSource, IsNull, LessThan, MoreThan, Not } from 'typeorm';
 import {
     CreateParkingStationData,
     UpdateParkingStationPropertyData,
@@ -141,8 +141,12 @@ export class ParkingStationsService {
                         { id: IsNull() },
                     ],
                 },
+
+                from: LessThan(new Date()),
+                to: MoreThan(new Date()),
             },
         });
+        console.log('bookingOutSide', bookingOutSide);
 
         const parkingCar = await this.parkingRepository.find({
             where: {
@@ -153,27 +157,6 @@ export class ParkingStationsService {
             },
         });
 
-        // const result = await this.monthParkingRepository.findAndCount({
-        //     where: {
-        //         parkingStation: {
-        //             id: parkingStationId,
-        //         },
-        //         vehicle: {
-        //             parkings: [
-        //                 {
-        //                     parkingStation: {
-        //                         id: parkingStationId,
-        //                     },
-        //                     checkOut: Not(IsNull()),
-        //                 },
-        //                 {
-        //                     parkingStation: { id: Not(parkingStationId) },
-        //                 },
-        //                 { id: IsNull() },
-        //             ],
-        //         },
-        //     },
-        // });
         console.log(monthParkingOutSide.length);
         console.log();
 

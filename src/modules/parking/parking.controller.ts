@@ -80,8 +80,6 @@ export class ParkingController {
             body.vehicleIdentity,
             body.parkingStationId,
         );
-        console.log(parking);
-
         const checkout = moment(new Date());
         const existingMonthParking =
             await this.monthParkingService.getMonthParking(
@@ -89,8 +87,6 @@ export class ParkingController {
                 body.parkingStationId,
                 body.vehicleIdentity,
             );
-        console.log(existingMonthParking);
-
         if (existingMonthParking) {
             parking.checkOut = new Date();
             parking.price = 0;
@@ -100,14 +96,11 @@ export class ParkingController {
         const duration = moment
             .duration(checkout.diff(moment(parking.checkIn)))
             .hours();
-        console.log(duration);
 
         const price =
             duration > 1
                 ? parking.parkingStation.pricePerHour * duration
                 : parking.parkingStation.pricePerHour;
-        console.log(parking);
-        console.log(duration);
         const checkoutInfo = {
             parkingId: parking.id,
             checkOut: new Date(),
@@ -135,8 +128,6 @@ export class ParkingController {
             secureSecret: '6D0870CDE5F24F34F3915FB0045120DB',
         });
         const checkoutUrl = await onepayIntl.buildCheckoutUrl(checkoutData);
-        console.log(checkoutUrl.href);
-
         return checkoutUrl.href;
     }
 
@@ -145,8 +136,6 @@ export class ParkingController {
     async checkoutManual(@Body(new ValidationPipe()) body: CheckoutManualData) {
         try {
             const result = await this.parkingService.checkoutManual(body);
-            console.log(result);
-
             return result;
         } catch (error) {
             return error;

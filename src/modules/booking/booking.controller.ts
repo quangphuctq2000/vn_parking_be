@@ -1,33 +1,30 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { BookingService } from './booking.service';
 import { CreateBooking } from './booking.dto';
-import { VehicleService } from '../vehicle/vehicle.service';
 import moment from 'moment';
 
 @Controller('booking')
 @ApiTags('Booking')
 export class BookingController {
-    constructor(
-        private bookingService: BookingService,
-        private vehicleService: VehicleService,
-    ) {}
+    constructor(private bookingService: BookingService) {}
     @Post()
     @ApiBody({
         type: CreateBooking,
     })
     async createBooking(@Body() body: CreateBooking) {
-        const currentTime = new Date();
-        const month = moment(currentTime).format('M');
-        try {
-            const result = await this.vehicleService.getParkingVehicle(
-                Number(body.parkingStationId),
-                new Date(),
-                Number(month),
-            );
-            console.log(result);
-        } catch (error) {
-            console.log(error);
-        }
+        return await this.bookingService.createBooking(body);
+    }
+
+    @Get('/success')
+    @ApiBody({
+        type: CreateBooking,
+    })
+    async bookingSuccess(@Req() request) {
+        console.log(request.query);
+        console.log('request.query.Title', request.query.Title);
+        const { id, price } = JSON.parse(request.query.Title);
+        await this.bookingService.bookingSuccess(Number(id), Number(price));
+        return true;
     }
 }
