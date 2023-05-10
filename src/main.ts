@@ -5,9 +5,11 @@ import { User } from './modules/users/user.dto';
 import { Vehicle } from './modules/vehicle/vehicle.dto';
 import { ParkingStation } from './ultis/dto/parking_station';
 import { Parking } from './ultis/dto/parking';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 
 async function bootstrap() {
-    const app = await NestFactory.create(AppModule);
+    const app = await NestFactory.create<NestExpressApplication>(AppModule);
     const config = new DocumentBuilder()
         .addBearerAuth()
         .setTitle('VN Parking')
@@ -24,6 +26,8 @@ async function bootstrap() {
             operationsSorter: 'method',
         },
     });
+    app.setBaseViewsDir(join(__dirname, '..', 'views'));
+    app.setViewEngine('hbs');
     app.enableCors();
     await app.listen(3000);
 }

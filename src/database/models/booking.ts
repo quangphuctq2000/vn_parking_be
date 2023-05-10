@@ -11,7 +11,10 @@ export class Booking {
     @ManyToOne(() => Vehicle, (vehicle) => vehicle.bookings)
     vehicle: Vehicle;
 
-    @ManyToOne(() => ParkingStation, (parkingStation) => parkingStation.id)
+    @ManyToOne(
+        () => ParkingStation,
+        (parkingStation) => parkingStation.bookings,
+    )
     parkingStation: ParkingStation;
 
     @Column({ type: 'datetime' })

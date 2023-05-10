@@ -17,12 +17,10 @@ export class Parking {
 
 export class CheckInDto {
     @ApiProperty()
-    @IsNumber()
-    parkingStationId: number;
-
-    @ApiProperty()
     @IsString()
     vehicleIdentity: string;
+
+    userId: string;
 }
 
 export class CheckOutDto {
@@ -35,6 +33,28 @@ export class CheckOutDto {
     vehicleIdentity: string;
 }
 
+export class CheckoutManualData {
+    @ApiProperty()
+    @IsString()
+    vehicleIdentity: string;
+
+    userId: string;
+}
+
+export class CheckoutManualSuccessData {
+    @ApiProperty()
+    @IsNumber()
+    parkingId: number;
+
+    @ApiProperty()
+    @IsNumber()
+    price: number;
+
+    @ApiProperty()
+    @IsString()
+    checkOut: string;
+}
+
 export class CheckoutSuccessDto {
     @ApiProperty()
     @IsNumber()
@@ -45,6 +65,11 @@ export class CheckoutSuccessDto {
     price: number;
 
     @ApiProperty()
-    @IsDate()
-    checkOut: Date;
+    @IsString()
+    checkOut: string;
 }
+
+// export class CheckoutManualData{
+//     @ApiProperty()
+//     @
+// }

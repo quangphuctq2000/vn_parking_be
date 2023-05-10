@@ -58,7 +58,7 @@ export class VehicleController {
                 description: vehicle.description,
                 identityNumber: vehicle.identityNumber,
             };
-            return response;
+            return response; 
         } catch (error) {
             throw error;
         }

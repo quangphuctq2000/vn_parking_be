@@ -34,7 +34,7 @@ export class Parking {
     @ManyToOne(() => Vehicle, (vehicle) => vehicle.parkings)
     vehicle: Vehicle;
 
-    @ManyToOne(() => ParkingStation, (parkingStation) => parkingStation.id)
+    @ManyToOne(() => ParkingStation, (parkingStation) => parkingStation.parkings)
     parkingStation: ParkingStation;
 
     @Column()

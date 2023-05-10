@@ -1,7 +1,6 @@
 import { Vehicle } from '@/database/models/vehicle';
 import { Injectable } from '@nestjs/common';
-import { from } from 'rxjs';
-import { DataSource, Equal, IsNull, LessThan, MoreThan, Not } from 'typeorm';
+import { DataSource, IsNull, LessThan, MoreThan } from 'typeorm';
 
 @Injectable()
 export class VehicleService {
@@ -76,18 +75,18 @@ export class VehicleService {
                         month,
                     },
                 },
-                {
-                    bookings: {
-                        from: LessThan(currentTime),
-                        to: MoreThan(currentTime),
-                    },
-                },
+                // {
+                //     bookings: {
+                //         from: LessThan(currentTime),
+                //         to: MoreThan(currentTime),
+                //     },
+                // },
             ],
-            relations: {
-                parkings: true,
-                monthParkings: true,
-                bookings: true,
-            },
+            // relations: {
+            //     parkings: true,
+            //     monthParkings: true,
+            //     bookings: true,
+            // },
         });
         return parkingVehicle;
     }

@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Request } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { ApiBearerAuth, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ParkingStationsService } from './parking_stations.service';
 import { GetParkingStationResponse as ParkingStationResponse } from './parking_station.dto';
@@ -33,7 +33,12 @@ export class ParkingStationsController {
         try {
             const { id } = params;
             const parkingStation = await this.parkingStationsService.get(id);
+            const parkingStationVehicle =
+                await this.parkingStationsService.getParkingStationVehicle(id);
             const response: ParkingStationResponse = parkingStation;
+            // @ts-ignore
+            response.freeParkingLotNumber =
+                response.parkingLotNumber - parkingStationVehicle;
             return response;
         } catch (error) {
             throw error;

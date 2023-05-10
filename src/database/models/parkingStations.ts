@@ -1,5 +1,15 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+    Column,
+    Entity,
+    ManyToOne,
+    OneToMany,
+    PrimaryGeneratedColumn,
+} from 'typeorm';
 import { User } from './users';
+import { Parking } from './parking';
+import { ParkingStationDocument } from './parkingStationDocument';
+import { Feedback } from './feedback';
+import { Booking } from './booking';
 
 @Entity()
 export class ParkingStation {
@@ -45,6 +55,24 @@ export class ParkingStation {
     })
     pricePerMonth: number;
 
+    @Column({ default: 'active' })
+    state: string;
+
     @ManyToOne(() => User, (user) => user.parkingStations)
     user: User;
+
+    @OneToMany(() => Parking, (parking) => parking.id)
+    parkings: Parking[];
+
+    @OneToMany(
+        () => ParkingStationDocument,
+        (parkingStationDocument) => parkingStationDocument.id,
+    )
+    parkingStationDocuments: ParkingStationDocument[];
+
+    @OneToMany(() => Feedback, (feedback) => feedback.id)
+    feedbacks: Feedback[];
+
+    @OneToMany(() => Booking, (booking) => booking.id)
+    bookings: Booking[];
 }

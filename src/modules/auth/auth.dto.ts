@@ -36,8 +36,7 @@ export class UpdateUserInfoData {
     @ApiProperty({
         required: false,
     })
-    @IsString()
-    phoneNumber?: string;
+    phoneNumber: string;
 
     userId: string;
 }

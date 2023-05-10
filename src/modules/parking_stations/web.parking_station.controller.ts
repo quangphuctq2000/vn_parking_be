@@ -7,6 +7,7 @@ import {
     HttpCode,
     Param,
     Post,
+    Put,
     Req,
 } from '@nestjs/common';
 import {
@@ -19,8 +20,9 @@ import {
 } from '@nestjs/swagger';
 import {
     CreateParkingStationResponseBody,
-    CreateParkingStationRequestBody,
+    CreateParkingStationData,
     GetParkingStationResponse,
+    UpdateParkingStationPropertyData,
 } from './parking_station.dto';
 import { ParkingStationsService } from './parking_stations.service';
 import { ValidationPipe } from '@/helpers/validationPipe';
@@ -39,46 +41,30 @@ export class WebParkingStationsController {
     ) {}
 
     @ApiResponse({
-        type: CreateParkingStationResponseBody,
+        description: 'create parking station success',
         status: 200,
     })
+    @ApiResponse({
+        description: 'forbidden',
+        status: 403,
+    })
+    @ApiResponse({
+        description: 'unauthorization',
+        status: 401,
+    })
     @ApiBody({
-        type: CreateParkingStationRequestBody,
+        type: CreateParkingStationData,
     })
     @ApiBearerAuth()
     @Post()
     @HttpCode(200)
     async createParkingStation(
-        @Body(new ValidationPipe()) body: CreateParkingStationRequestBody,
+        @Body(new ValidationPipe()) body: CreateParkingStationData,
         @Req() request: AuthorizedRequest,
     ) {
-        const { userId } = request.body;
         try {
-            const existedUser = await this.usersService.get(userId);
-            if (!existedUser) throw new BadRequestException();
-            if (isParkingStationOwner(existedUser))
-                throw new ForbiddenException();
-
-            const parkingStation = new ParkingStation();
-            parkingStation.name = body.name;
-            parkingStation.latitude = body.latitude;
-            parkingStation.longitude = body.longitude;
-            parkingStation.description = body.description;
-            parkingStation.parkingLotNumber = body.parkingLotNumber;
-            parkingStation.user = existedUser;
-
-            await this.parkingStationsService.create(parkingStation);
-            const response: CreateParkingStationResponseBody = {
-                id: parkingStation.id,
-                name: parkingStation.name,
-                latitude: parkingStation.latitude,
-                longitude: parkingStation.longitude,
-                description: parkingStation.description,
-                parkingLotNumber: parkingStation.parkingLotNumber,
-                pricePerHour: parkingStation.pricePerHour,
-                pricePerMonth: parkingStation.pricePerMonth,
-            };
-            return response;
+            await this.parkingStationsService.createParkingStation(body);
+            return true;
         } catch (error) {
             throw error;
         }
@@ -87,19 +73,18 @@ export class WebParkingStationsController {
     @Get()
     @ApiBearerAuth()
     @ApiResponse({
-        type: [ParkingStation],
+        type: ParkingStation,
     })
     async getAllParkingStation(@Req() request: AuthorizedRequest) {
-        const { userId } = request.body;
-        const existedUser = await this.usersService.get(userId);
-        if (!existedUser) throw new BadRequestException();
-        if (!isParkingStationOwner) throw new ForbiddenException();
         try {
-            return await this.parkingStationsService.getAllUserParkingStation(
-                userId,
-            );
+            const parkingStation =
+                await this.parkingStationsService.getParkingStationByUserId(
+                    request.body.userId,
+                );
+            console.log('parkingStation', parkingStation);
+            return parkingStation;
         } catch (error) {
-            throw error;
+            return error;
         }
     }
 
@@ -123,6 +108,18 @@ export class WebParkingStationsController {
                 );
             const response: GetParkingStationResponse = parkingStation;
             return response;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    @Put()
+    async updateParkingStation(
+        @Body(new ValidationPipe()) body: UpdateParkingStationPropertyData,
+    ) {
+        try {
+            await this.parkingStationsService.updateParkingStation(body);
+            return true;
         } catch (error) {
             throw error;
         }

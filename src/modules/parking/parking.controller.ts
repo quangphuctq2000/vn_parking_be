@@ -4,21 +4,26 @@ import {
     Controller,
     Get,
     Post,
-    Query,
-    Redirect,
     Req,
+    HttpCode,
+    Param,
+    Render,
 } from '@nestjs/common';
 import {
     ApiBearerAuth,
     ApiBody,
+    ApiParam,
     ApiProperty,
-    ApiQuery,
     ApiTags,
 } from '@nestjs/swagger';
 import { ParkingService } from './parking.service';
-import { UsersService } from '../users/users.service';
-import { Parking } from '@/database/models/parking';
-import { CheckInDto, CheckOutDto, CheckoutSuccessDto } from './parking.dto';
+import {
+    CheckInDto,
+    CheckOutDto,
+    CheckoutManualData,
+    CheckoutManualSuccessData,
+    CheckoutSuccessDto,
+} from './parking.dto';
 import { ValidationPipe } from '@/helpers/validationPipe';
 import { ParkingStationsService } from '../parking_stations/parking_stations.service';
 import { VehicleService } from '../vehicle/vehicle.service';
@@ -38,40 +43,37 @@ export class ParkingController {
     ) {}
 
     @Post('/checkIn')
-    // @ApiBearerAuth()
+    @ApiBearerAuth()
+    @HttpCode(200)
     @ApiProperty({
         type: CheckInDto,
     })
     async checkIn(@Body(new ValidationPipe()) body: CheckInDto) {
         try {
-            const parkingStation = await this.parkingStationService.get(
-                body.parkingStationId,
-            );
-            if (!parkingStation) throw new BadRequestException();
-            const existingVehicle = await this.vehicleService.get(
-                body.vehicleIdentity,
-            );
-            const parking = new Parking();
-            parking.parkingStation = parkingStation;
-            parking.checkIn = new Date();
-            // parking.checkOut = null;
-            parking.vehicleIdentityNumber = body.vehicleIdentity;
-            if (existingVehicle) {
-                parking.vehicle = existingVehicle;
-            }
-            await this.parkingService.checkIn(parking);
-            return parking;
+            const parkingStation =
+                await this.parkingStationService.getParkingStationByUserId(
+                    body.userId,
+                );
+            const carInParkingStation =
+                await this.parkingStationService.getParkingStationVehicle(
+                    parkingStation.id,
+                );
+            if (parkingStation.parkingLotNumber <= carInParkingStation)
+                throw new BadRequestException();
+            await this.parkingService.checkIn(body);
+            return true;
         } catch (error) {
             throw error;
         }
     }
 
     @Post('/checkOut')
-    // @ApiBearerAuth()
+    @ApiBearerAuth()
     @ApiBody({
         type: CheckOutDto,
     })
     // @Redirect()
+    @HttpCode(200)
     async checkOut(@Req() request: { body: CheckOutDto; ip }) {
         const { body } = request;
         const parking = await this.parkingService.checkOut(
@@ -138,11 +140,37 @@ export class ParkingController {
         return checkoutUrl.href;
     }
 
+    @Post('/checkout-manual-info')
+    @HttpCode(200)
+    async checkoutManual(@Body(new ValidationPipe()) body: CheckoutManualData) {
+        try {
+            const result = await this.parkingService.checkoutManual(body);
+            console.log(result);
+
+            return result;
+        } catch (error) {
+            return error;
+        }
+    }
+    @Post('/checkout-manual-success')
+    @HttpCode(200)
+    async checkoutManualSuccess(
+        @Body(new ValidationPipe()) body: CheckoutManualSuccessData,
+    ) {
+        try {
+            await this.parkingService.checkoutManualSuccess(body);
+            return true;
+        } catch (error) {
+            return error;
+        }
+    }
+
     @Get('/checkoutSuccess')
+    @Render('parking_payment')
     @ApiProperty({ type: CheckoutSuccessDto })
     async checkOutSuccess(@Req() request) {
         console.log(request.query);
-        console.log(request.query.Title);
+        console.log('request.query.Title', request.query.Title);
 
         const parking: {
             parkingId: number;
@@ -157,6 +185,20 @@ export class ParkingController {
         existingParking.checkOut = new Date(parking.checkOut);
         existingParking.price = parking.price;
         await this.parkingService.checkOutSuccess(existingParking);
-        return existingParking;
+        return {
+            parkingId: parking.parkingId,
+        };
+    }
+
+    @Get('/detail/:id')
+    @ApiParam({ name: 'id', type: Number })
+    async getParking(@Param() params: any) {
+        try {
+            const result = await this.parkingService.getParking(params.id);
+            console.log(result);
+            return result;
+        } catch (error) {
+            return error;
+        }
     }
 }

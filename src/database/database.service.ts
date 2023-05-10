@@ -8,13 +8,14 @@ import { Vehicle } from './models/vehicle';
 import { Parking } from './models/parking';
 import { Booking } from './models/booking';
 import { MonthParking } from './models/monthParking';
+import { Notification } from './models/notification';
+import { ParkingStationDocument } from './models/parkingStationDocument';
+import { Feedback } from '@database/models/feedback';
 
 export const dataSource = {
     provide: DataSource,
     useFactory: async (): Promise<DataSource> => {
         const databaseConfig = dbConfig;
-        console.log(databaseConfig);
-
         const dataSource = new DataSource({
             type: databaseConfig.type,
             host: databaseConfig.host,
@@ -31,8 +32,11 @@ export const dataSource = {
                 Parking,
                 Booking,
                 MonthParking,
+                Notification,
+                ParkingStationDocument,
+                Feedback,
             ],
-            synchronize: true,
+            // synchronize: true,
             logging: true,
         });
         try {

@@ -19,9 +19,6 @@ export class BookingController {
     async createBooking(@Body() body: CreateBooking) {
         const currentTime = new Date();
         const month = moment(currentTime).format('M');
-        console.log(body.parkingStationId);
-
-        console.log(month);
         try {
             const result = await this.vehicleService.getParkingVehicle(
                 Number(body.parkingStationId),

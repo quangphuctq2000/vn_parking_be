@@ -1,14 +1,9 @@
-import {
-    Column,
-    Entity,
-    JoinColumn,
-    OneToMany,
-    OneToOne,
-    PrimaryColumn,
-} from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { ParkingStation } from './parkingStations';
 import { Vehicle } from './vehicle';
 import { Role } from '@/ultis/role';
+import { Notification } from './notification';
+import { Feedback } from '@database/models/feedback';
 
 @Entity()
 export class User {
@@ -26,4 +21,10 @@ export class User {
 
     @OneToMany(() => Vehicle, (vehicle) => vehicle.user)
     vehicle: Vehicle;
+
+    @OneToMany(() => Notification, (notification) => notification.id)
+    notifications: Notification[];
+
+    @OneToMany(() => Feedback, (feedback) => feedback.id)
+    feedbacks: Feedback[];
 }
