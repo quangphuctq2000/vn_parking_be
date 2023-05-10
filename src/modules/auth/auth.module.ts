@@ -28,6 +28,7 @@ export class AuthModule {
             .forRoutes(
                 { path: 'auth/user-info', method: RequestMethod.PUT },
                 { path: 'auth/user-auth-info', method: RequestMethod.PUT },
+                { path: 'auth/user', method: RequestMethod.PUT },
             );
     }
 }

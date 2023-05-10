@@ -72,7 +72,6 @@ export class ParkingController {
     @ApiBody({
         type: CheckOutDto,
     })
-    // @Redirect()
     @HttpCode(200)
     async checkOut(@Req() request: { body: CheckOutDto; ip }) {
         const { body } = request;

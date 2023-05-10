@@ -1,6 +1,6 @@
 import { Role } from '@/ultis/role';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsString } from 'class-validator';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
 
 export class CreateUserData {
     @ApiProperty({ enum: Role })
@@ -47,6 +47,31 @@ export class UpdateUserEmailPasswordData {
     email: string;
 
     @ApiProperty({ required: false })
+    password?: string;
+
+    userId: string;
+}
+
+export class UpdateUser {
+    @ApiProperty({ required: false })
+    @IsOptional()
+    @IsString()
+    displayName?: string;
+
+    @ApiProperty({
+        required: false,
+    })
+    @IsOptional()
+    phoneNumber?: string;
+
+    @ApiProperty({ required: false })
+    @IsString()
+    @IsOptional()
+    email?: string;
+
+    @ApiProperty({ required: false })
+    @IsString()
+    @IsOptional()
     password?: string;
 
     userId: string;

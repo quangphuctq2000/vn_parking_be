@@ -12,6 +12,7 @@ import {
     AuthWithGoogleData,
     CreateUserData,
     LoginData,
+    UpdateUser,
     UpdateUserEmailPasswordData,
     UpdateUserInfoData,
 } from './auth.dto';
@@ -125,6 +126,16 @@ export class AuthService {
             await getAuth().updateUser(userId, updateUserEmailPassword);
         } catch (error) {
             throw new BadRequestException();
+        }
+    }
+
+    async updateUser(data: UpdateUser) {
+        try {
+            await getAuth().updateUser(data.userId, data);
+        } catch (error) {
+            console.log(error);
+
+            throw error;
         }
     }
 }

@@ -15,6 +15,7 @@ import {
     AuthWithGoogleData,
     UpdateUserInfoData,
     UpdateUserEmailPasswordData,
+    UpdateUser,
 } from './auth.dto';
 
 @ApiTags('auth')
@@ -107,6 +108,17 @@ export class AuthController {
     ) {
         try {
             await this.authService.updateEmailPassword(body);
+            return true;
+        } catch (error) {
+            return error;
+        }
+    }
+
+    @Put('/user')
+    @ApiBearerAuth()
+    async updateUser(@Body(new ValidationPipe()) body: UpdateUser) {
+        try {
+            await this.authService.updateUser(body);
             return true;
         } catch (error) {
             return error;

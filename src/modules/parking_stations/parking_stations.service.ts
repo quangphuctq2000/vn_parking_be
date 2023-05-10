@@ -182,6 +182,9 @@ export class ParkingStationsService {
                             id: userId,
                         },
                     });
+                    console.log('user', user);
+                    console.log(Role.parking_station_owner);
+
                     if (!user || user.role != Role.parking_station_owner)
                         throw new ForbiddenException();
                     return await transactionEntityManager.findOne(
