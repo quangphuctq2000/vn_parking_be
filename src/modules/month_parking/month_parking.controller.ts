@@ -37,8 +37,6 @@ export class MonthParkingController {
         const existingVehicle = await this.vehicleService.getVehicle(
             body.vehicleIdentityNumber,
         );
-        console.log(existingVehicle);
-
         if (!existingVehicle) throw new BadRequestException();
         if (!existingParkingStation) throw new BadRequestException();
         const parkingStationParkingMonth =

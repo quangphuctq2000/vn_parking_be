@@ -32,7 +32,6 @@ export class ParkingModule {
                     path: 'parking/checkout-manual-success',
                     method: RequestMethod.POST,
                 },
-                { path: 'parking/checkoutSuccess', method: RequestMethod.GET },
                 { path: 'parking/detail/:id', method: RequestMethod.GET },
             );
     }

@@ -113,15 +113,17 @@ export class ParkingStationsService {
                             },
                             checkOut: Not(IsNull()),
                         },
-                        {
-                            parkingStation: { id: Not(parkingStationId) },
-                        },
+                        // {
+                        //     parkingStation: { id: Not(parkingStationId) },
+                        // },
                         { id: IsNull() },
                     ],
                 },
                 month: Number(moment(new Date()).format('M')),
             },
         });
+        console.log(monthParkingOutSide);
+
         const bookingOutSide = await this.bookingRepository.find({
             where: {
                 parkingStation: {
